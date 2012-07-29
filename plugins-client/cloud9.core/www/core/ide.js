@@ -147,7 +147,8 @@ define(function(require, exports, module) {
                 return;
             }
         }
-
+ if (message.type != "shell-data")
+    console.log("MSG", message)
         if (message.type == "attached") {
             ide.connecting = false;
             ide.connected = true;

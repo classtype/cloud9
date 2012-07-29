@@ -44,7 +44,20 @@ util.inherits(SearchPlugin, Plugin);
 
     this.init = function() {
         var self = this;
-        this.eventbus.on("search::filelist", function(msg) {
+        this.eventbus.on("search::filelist", findCmd == "dir" ? function(msg) {
+            if (msg.type == "shell-start")
+                self.processCount += 1;
+            else if (msg.type == "shell-exit")
+                self.processCount -= 1;
+            else if (msg.stream != "stdout")
+                return;
+          /*console.log(self.basePath)
+            console.log(msg.data) */
+            if (msg.data)
+                msg.data = msg.data.split("\r\n" + self.basePath + "\\").join("\n").replace(/\\/g, "/");
+                
+            self.ide.broadcast(JSON.stringify(msg), self.name);
+        } : function(msg) {
             if (msg.type == "shell-start")
                 self.processCount += 1;
             else if (msg.type == "shell-exit")
@@ -84,12 +97,13 @@ util.inherits(SearchPlugin, Plugin);
         message.uri = path;
         message.path = this.basePath + (path ? "/" + path : "");
 
-
+console.log(message)
         if (type == "codesearch")
             var args = this.assembleSearchCommand(message);
         else if (type == "filelist")
             var args = this.assembleFileListCommand(message);
-
+console.log(args.command + " " + args.join())
+            
         if (!args)
             return false;
 
@@ -213,6 +227,12 @@ util.inherits(SearchPlugin, Plugin);
 
 
     this.assembleFileListCommand = function(options) {
+        if (findCmd == "dir") {
+            var a = ["/C", "dir /S /B"]
+            a.command = "cmd"
+            return a
+        }
+        
         var excludeExtensions = [
             "\\.gz", "\\.bzr", "\\.cdv", "\\.dep", "\\.dot", "\\.nib",
             "\\.plst", "_darcs", "_sgbak", "autom4te\\.cache", "cover_db",

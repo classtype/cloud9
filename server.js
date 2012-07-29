@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 
 var path = require('path');
+var fs = require('fs');
+// support both node 0.6 and 0.8
+["exists", "existsSync"].forEach(function(x){
+    if (path[x] && !fs[x])
+        fs[x] = path[x];
+    else if (fs[x] && !path[x])
+        path[x] = fs[x];
+});
+
+
 var architect = require("architect");
 var spawn = require("child_process").spawn;
 
@@ -22,7 +32,7 @@ for (var p = 2; p < process.argv.length; p++) {
    if (process.argv[p] === "-d") {
        debug = true;
        
-       if(!path.existsSync("plugins-client/lib.apf/www/apf-packaged/apf_debug.js")) {
+       if(!fs.existsSync("plugins-client/lib.apf/www/apf-packaged/apf_debug.js")) {
        		console.log("Building apfdebug for first run...");
        		
             var buildDebug = spawn("npm", ["run-script", "build-debug"]);
@@ -52,7 +62,7 @@ for (var p = 2; p < process.argv.length; p++) {
 
        configName = "packed";
 
-       if(!path.existsSync("plugins-client/lib.packed/www/" + packedName) && !path.existsSync("plugins-client/lib.packed/www/" + packedName + ".gz")) {
+       if(!fs.existsSync("plugins-client/lib.packed/www/" + packedName) && !fs.existsSync("plugins-client/lib.packed/www/" + packedName + ".gz")) {
        		console.log("Building packed file for first run...Please wait...");
 		   	  console.log("   |\\      _,,,---,,_\n"+
 		   				"   /,`.-'`'    -.  ;-;;,_\n" +

@@ -41,6 +41,7 @@ util.inherits(NodeRuntimePlugin, Plugin);
     this.init = function() {
         var self = this;
         this.eventbus.on(this.channel, function(msg) {
+        console.log(msg)
             msg.type = msg.type.replace(/^node-debug-(start|data|exit)$/, "node-$1");
             var type = msg.type;
 
