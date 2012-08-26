@@ -6,7 +6,7 @@ module.exports = function setup(options, imports, register) {
     var sandbox = imports.sandbox;
     var vfs = imports.vfs;
     var nodePath = options.nodePath || null;
-    var debugPort = options.debugPort || 5858;
+    var debugPort = options.debugPort || 5758;
     var runNode = imports["run-node"];
     
     assert(options.listenHint, "Option 'listenHint' is required");

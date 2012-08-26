@@ -5,6 +5,8 @@
  * @license GPLv3 <http://www.gnu.org/licenses/gpl.txt>
  */
 
+/*global stProcessRunning*/
+
 define(function(require, exports, module) {
 
 var ide = require("core/ide");
@@ -12,7 +14,6 @@ var ext = require("core/ext");
 var settings = require("core/settings");
 var markup = require("text!ext/noderunner/noderunner.xml");
 var c9console = require("ext/console/console");
-var _debugger = require("ext/debugger/debugger");
 
 module.exports = ext.register("ext/noderunner/noderunner", {
     name    : "Node Runner",
@@ -141,8 +142,8 @@ module.exports = ext.register("ext/noderunner/noderunner", {
         var runner;
         if (stProcessRunning.active || typeof path != "string")
             return false;
-        // TODO there should be a way to set satate to waiting
-        stProcessRunning.activate()
+        // TODO there should be a way to set state to waiting
+        stProcessRunning.activate();
 
         path = path.trim();
 
